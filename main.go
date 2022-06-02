@@ -14,7 +14,7 @@ import (
 )
 
 // var c cache.ICache
-// var c database.IDatabase
+// var c database.IDatabase test
 var db *sql.DB
 
 func main() {
