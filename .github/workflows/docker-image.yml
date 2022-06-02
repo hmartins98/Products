@@ -25,6 +25,11 @@ jobs:
       with:
         go-version: '1.16.0' # The Go version to download (if necessary) and use.
     
+    - name: Config Github
+      run: git config --global url.https://$GH_ACCESS_TOKEN@github.com/.insteadOf https://github.com/
+    - name: Run mod init
+      run: go mod init Products 
+      
     # Install all the dependencies
     - name: Install dependencies
       run: |
@@ -36,11 +41,7 @@ jobs:
       run: |
         go vet .
         golint .
-    
-    - name: Config Github
-      run: git config --global url.https://$GH_ACCESS_TOKEN@github.com/.insteadOf https://github.com/
-    - name: Run mod init
-      run: go mod init Products 
+      
     - name: Run mod tidy
       run: go mod tidy
     # Run build of the application
