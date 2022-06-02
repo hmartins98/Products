@@ -29,7 +29,12 @@ jobs:
       run: git config --global url.https://$GH_ACCESS_TOKEN@github.com/.insteadOf https://github.com/
     - name: Run mod init
       run: go mod init Products 
-      
+    - name: Run mod tidy
+      run: go mod tidy
+    # Run build of the application
+    - name: Run build
+      run: go build -o main .
+    
     # Install all the dependencies
     - name: Install dependencies
       run: |
@@ -41,12 +46,6 @@ jobs:
       run: |
         go vet .
         golint .
-      
-    - name: Run mod tidy
-      run: go mod tidy
-    # Run build of the application
-    - name: Run build
-      run: go build -o main .
     
     # Run testing on the code
     #- name: Run testing
