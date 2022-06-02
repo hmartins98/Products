@@ -4,10 +4,10 @@ ENV HOME /root
 
 WORKDIR ${HOME}
 
-RUN mkdir -p -m 0600 ~/.ssh && \
-    ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-COPY ./.ssh/id_ed25519 ./.ssh/id_ed25519
-RUN chmod 0600 ./.ssh/id_ed25519
+#RUN mkdir -p -m 0600 ~/.ssh && \
+#    ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+#COPY ./.ssh/id_ed25519 ./.ssh/id_ed25519
+#RUN chmod 0600 ./.ssh/id_ed25519
 
 WORKDIR /go/src
 
