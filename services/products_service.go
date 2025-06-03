@@ -1,25 +1,27 @@
-package main
+package services
 
 import (
 	context "context"
 
-	entities "Products/entities"
-	models "Products/models"
+	models "hmartins98/Products/models"
+	repository "hmartins98/Products/repositories"
 
-	CustomTypes "github.com/hmartins98/Contracts/CustomTypes"
-	Products "github.com/hmartins98/Contracts/Products"
+	contract "hmartins98/Products/contracts"
+
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-type server struct {
-	Products.UnimplementedProductsContractServer
+type ProductService struct {
+	repo repository.ProductRepo
+	contract.UnimplementedProductsContractServer
 }
 
-func (*server) CreateProduct(ctx context.Context, req *Products.Product) (*CustomTypes.BOOL, error) {
-	productModel := models.ProductModel{
-		Db: db,
-	}
+func NewProductService(repo repository.ProductRepo) *ProductService {
+	return &ProductService{repo: repo}
+}
 
-	productEntity := &entities.Product{
+func (s *ProductService) CreateProduct(ctx context.Context, req *contract.Product) (*emptypb.Empty, error) {
+	productEntity := &models.Product{
 		Id:          req.Id,
 		Name:        req.Name,
 		TypeId:      req.TypeId,
@@ -28,18 +30,14 @@ func (*server) CreateProduct(ctx context.Context, req *Products.Product) (*Custo
 		ReviewScore: req.ReviewScore,
 	}
 
-	result, err := productModel.CreateProduct(productEntity)
-	return &CustomTypes.BOOL{Value: result}, err
+	err := s.repo.CreateProduct(productEntity)
+	return &emptypb.Empty{}, err
 }
 
-func (*server) ReadProduct(ctx context.Context, req *Products.ProductId) (*Products.Product, error) {
-	productModel := models.ProductModel{
-		Db: db,
-	}
+func (s *ProductService) ReadProduct(ctx context.Context, req *contract.ProductId) (*contract.Product, error) {
+	productEntity, err := s.repo.ReadProduct(req.Id)
 
-	productEntity, err := productModel.ReadProduct(req.Id)
-
-	productResult := &Products.Product{
+	productResult := &contract.Product{
 		Id:          productEntity.Id,
 		Name:        productEntity.Name,
 		TypeId:      productEntity.TypeId,
@@ -51,17 +49,17 @@ func (*server) ReadProduct(ctx context.Context, req *Products.ProductId) (*Produ
 	return productResult, err
 }
 
-func (*server) UpdateProduct(ctx context.Context, req *Products.Product) (*CustomTypes.BOOL, error) {
+func (s *ProductService) UpdateProduct(ctx context.Context, req *contract.Product) (*emptypb.Empty, error) {
 
 	// db, err := config.GetPostgresDB()
 	// if err != nil {
 	// 	fmt.Println(err)
 	// } else {
-	// 	productModel := models.ProductModel{
+	// 	ProductRepository := models.ProductRepository{
 	// 		Db: db,
 	// 	}
 	// 	fmt.Println("Product List")
-	// 	products, err2 := productModel.Search(250, 500)
+	// 	products, err2 := ProductRepository.Search(250, 500)
 	// 	if err2 != nil {
 	// 		fmt.Println(err2)
 	// 	} else {
@@ -77,20 +75,20 @@ func (*server) UpdateProduct(ctx context.Context, req *Products.Product) (*Custo
 	// 	}
 	// }
 
-	return &CustomTypes.BOOL{Value: false}, nil
+	return &emptypb.Empty{}, nil
 }
 
-func (*server) DeleteProduct(ctx context.Context, req *Products.ProductId) (*CustomTypes.BOOL, error) {
+func (*ProductService) DeleteProduct(ctx context.Context, req *contract.ProductId) (*emptypb.Empty, error) {
 
 	// db, err := config.GetPostgresDB()
 	// if err != nil {
 	// 	fmt.Println(err)
 	// } else {
-	// 	productModel := models.ProductModel{
+	// 	ProductRepository := models.ProductRepository{
 	// 		Db: db,
 	// 	}
 	// 	fmt.Println("Product List")
-	// 	products, err2 := productModel.Search(250, 500)
+	// 	products, err2 := ProductRepository.Search(250, 500)
 	// 	if err2 != nil {
 	// 		fmt.Println(err2)
 	// 	} else {
@@ -106,5 +104,5 @@ func (*server) DeleteProduct(ctx context.Context, req *Products.ProductId) (*Cus
 	// 	}
 	// }
 
-	return &CustomTypes.BOOL{Value: false}, nil
+	return &emptypb.Empty{}, nil
 }

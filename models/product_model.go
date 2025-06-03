@@ -1,10 +1,10 @@
-package entities
+package models
 
 type Product struct {
 	Id          int64
 	Name        string
-	TypeId      int32
-	Price       float32
+	TypeId      int64
+	Price       float64
 	Description string
-	ReviewScore float32
+	ReviewScore float64
 }

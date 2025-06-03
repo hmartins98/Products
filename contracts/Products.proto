@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package = "Products/contracts";
+
+package ProductsPackage;
+
+import "google/protobuf/empty.proto";
+
+service ProductsContract {
+  rpc CreateProduct (Product) returns (google.protobuf.Empty);
+  rpc ReadProduct (ProductId) returns (Product);
+  rpc UpdateProduct (Product) returns (google.protobuf.Empty);
+  rpc DeleteProduct (ProductId) returns (google.protobuf.Empty);
+}
+
+message Product {
+  int64 id = 1;
+  string name = 2;
+  int64 type_id = 4;
+  double price = 5;
+  string description = 6;
+  double review_score = 7;
+}
+
+message ProductId {
+  int64 id = 1;
+}
